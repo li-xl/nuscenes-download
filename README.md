@@ -8,3 +8,12 @@ This script is used for downloading and extracting the complete NuScenes dataset
 3. Insert the Bearer Token into the `bearer_token` variable in the `nuscenes_download.py` script.
 4. Set the `output_dir` and `region` variables.
 5. Run the `nuscenes_download.py` script.
+
+```python
+# replace with your API url and Bearer Token
+bearer_token = 'eyJraWQiOiJaUk14Z2gwZHg0UnRGVGR1VlhpZm9pa2U0bVJGaVlKN1lm'
+
+output_dir = "/path/to/save"
+region = 'asia' # 'us' or 'asia'
+
+```
