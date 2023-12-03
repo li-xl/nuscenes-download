@@ -25,7 +25,7 @@ download_files = {
     "v1.0-trainval09_blobs.tgz":"7cf0ac8b8d9925edbb6f23b96c0cd1cb",
     "v1.0-trainval10_blobs.tgz":"fedf0df4e82630abb2d3d517be12ef9d",
     "v1.0-test_meta.tgz":"f473fa9bb4d91e44ace5989d91419a46",
-    "v1.0-test_blobs.tgz":"f473fa9bb4d91e44ace5989d91419a46",
+    "v1.0-test_blobs.tgz":"3e1b78da1e08eed076ab3df082a54366",
 }
 
 # set request header
@@ -42,7 +42,7 @@ def download_file(url, save_file,md5):
             save_file = save_file.replace('.tgz', '.tar')
         elif content_type != 'application/octet-stream':
             print("unknow content type",content_type)
-            return
+            return save_file
 
     if os.path.exists(save_file):
         print(save_file,"has downloaded")
@@ -56,7 +56,7 @@ def download_file(url, save_file,md5):
             print(save_file,"check md5 failed,download again")
         else:
             print(save_file,"check md5 success")
-            return
+            return save_file
         
     file_size = int(response.headers.get('Content-Length', 0))
     progress_bar = tqdm(total=file_size, unit='B', unit_scale=True, unit_divisor=1024,desc=save_file, ascii=True)
@@ -77,6 +77,8 @@ def download_file(url, save_file,md5):
         print(save_file,"check md5 failed")
     else:
         print(save_file,"check md5 success")
+
+    return save_file
 
 
 
@@ -116,7 +118,8 @@ def main():
 
     os.makedirs(output_dir,exist_ok=True)
     for output_name,(download_url,save_file,md5) in download_data.items():
-        download_file(download_url,save_file,md5)
+        save_file = download_file(download_url,save_file,md5)
+        download_data[output_name] = [download_url,save_file,md5]
 
     print("Extracting files...")
     for output_name,(download_url,save_file,md5) in download_data.items():
