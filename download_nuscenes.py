@@ -6,26 +6,27 @@ import tarfile
 import gzip
 
 # replace with your API url and Bearer Token
-bearer_token = 'eyJraWQiOiJaUk14Z2gwZHg0UnRGVGR1VlhpZm9pa2U0bVJGaVlKN1lm'
+bearer_token = 'eyJraWQiOiJaUk14Z2gwZHg0UnRGVGR1VlhpZm9pa2U0bVJGaVlKN1lmMmVZSUxUblpZPSIsImFsZyI6IlJTMjU2In0.eyJjdXN0b206bmV3c19sZXR0ZXIiOiIxIiwiY3VzdG9tOmNvdW50cnkiOiJVbml0ZWQgU3RhdGVzIiwic3ViIjoiOGY1Y2I1ZGMtNDNmZi00NjlhLWI0MTMtNTNiZjUwYzBkNTQzIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX0c1NWVQenVzcCIsImNvZ25pdG86dXNlcm5hbWUiOiI4ZjVjYjVkYy00M2ZmLTQ2OWEtYjQxMy01M2JmNTBjMGQ1NDMiLCJnaXZlbl9uYW1lIjoiU2hpeXUiLCJjdXN0b206Y29tcGFueSI6IlNhZmVBSSIsImF1ZCI6IjdmcTVqdnM1ZmZzMWM1MGhkM3Rvb2JiM2I5IiwiZXZlbnRfaWQiOiJjOGI2NDEyMC05MGM4LTQxNTAtODNjNC1iN2M4YTYyOWMyOWQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcxMTg0MzI4MywiZXhwIjoxNzExODU3NjQ5LCJpYXQiOjE3MTE4NTQwNDksImZhbWlseV9uYW1lIjoiU29uZyIsImVtYWlsIjoic2hpeXVzQHNhZmVhaS5haSJ9.As2s4V_Gylv-oNfT4lsZxehvj4HgawWEhi07q2HK4twZwwCpxcWbCZZTF-ob2znvYEinODVnREFTq0pC5s33xxPVkW8AQRU1znWEFL_ZgY_kL6vszSC_2uoSd7s2ETOcAm49ZXiY_5dieJVnDbvZKMpJeRAszpwfiMm_nOJ6_LeT21lm7Zj4PVAP6zFDTBbrMZ4kgajnyKu69gD7PVRMEkTHAhK4dY-Dy2Wt-uXRXOte_5ZdgXZ0sHC08APJkZDHEgevIfNyWJ0yeIusJSX85re3uOdUN0H-CuffeCepKXoBr0DVijPVu6N0SfgLJZWkUJjcMUfxFGdOmt4B_x-16g'
 
 output_dir = "/path/to/save"
-region = 'asia' # 'us' or 'asia'
+extract_dir_suffix = "/../v1.0"
+region = 'us' # 'us' or 'asia'
 
 
 download_files = {
-    "v1.0-trainval_meta.tgz":"3eee698806fcf52330faa2e682b9f3a1",
-    "v1.0-trainval01_blobs.tgz":"8b5eaecef969aea173a5317be153ca63",
-    "v1.0-trainval02_blobs.tgz":"116085f49ec4c60958f9d49b2bd6bfdd",
-    "v1.0-trainval03_blobs.tgz":"9de7f2a72864d6f9ef5ce0b74e84d311",
-    "v1.0-trainval04_blobs.tgz":"4d0bec5cc581672bb557c777cd0f0556",
-    "v1.0-trainval05_blobs.tgz":"3747bb98cdfeb60f29b236a61b95d66a",
-    "v1.0-trainval06_blobs.tgz":"9f6948a19b1104385c30ad58ab64dabb",
-    "v1.0-trainval07_blobs.tgz":"d92529729f5506f5f0cc15cc82070c1b",
-    "v1.0-trainval08_blobs.tgz":"90897e7b58ea38634555c2b9583f4ada",
-    "v1.0-trainval09_blobs.tgz":"7cf0ac8b8d9925edbb6f23b96c0cd1cb",
-    "v1.0-trainval10_blobs.tgz":"fedf0df4e82630abb2d3d517be12ef9d",
-    "v1.0-test_meta.tgz":"f473fa9bb4d91e44ace5989d91419a46",
-    "v1.0-test_blobs.tgz":"3e1b78da1e08eed076ab3df082a54366",
+    "v1.0-test_meta.tgz":"b0263f5c41b780a5a10ede2da99539eb",
+    "v1.0-test_blobs.tgz":"e065445b6019ecc15c70ad9d99c47b33",
+    "v1.0-trainval01_blobs.tgz":"cbf32d2ea6996fc599b32f724e7ce8f2",
+    "v1.0-trainval02_blobs.tgz":"aeecea4878ec3831d316b382bb2f72da",
+    "v1.0-trainval03_blobs.tgz":"595c29528351060f94c935e3aaf7b995",
+    "v1.0-trainval04_blobs.tgz":"b55eae9b4aa786b478858a3fc92fb72d",
+    "v1.0-trainval05_blobs.tgz":"1c815ed607a11be7446dcd4ba0e71ed0",
+    "v1.0-trainval06_blobs.tgz":"7273eeea36e712be290472859063a678",
+    "v1.0-trainval07_blobs.tgz":"46674d2b2b852b7a857d2c9a87fc755f",
+    "v1.0-trainval08_blobs.tgz":"37524bd4edee2ab99678909334313adf",
+    "v1.0-trainval09_blobs.tgz":"a7fcd6d9c0934e4052005aa0b84615c0",
+    "v1.0-trainval10_blobs.tgz":"31e795f2c13f62533c727119b822d739",
+    "v1.0-trainval_meta.tgz":"537d3954ec34e5bcb89a35d4f6fb0d4a",
 }
 
 # set request header
@@ -124,9 +125,9 @@ def main():
     print("Extracting files...")
     for output_name,(download_url,save_file,md5) in download_data.items():
         if output_name.endswith(".tgz"):
-            extract_tgz_to_original_folder(save_file)
+            extract_tgz_to_original_folder(save_file) + extract_dir_suffix
         elif output_name.endswith(".tar"):
-            extract_tar_to_original_folder(save_file)
+            extract_tar_to_original_folder(save_file) + extract_dir_suffix
         else:
             print("unknow file type",output_name)
 
