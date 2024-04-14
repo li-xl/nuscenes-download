@@ -1,19 +1,27 @@
 # Nuscenes Download
 This script is used for downloading and extracting the complete NuScenes dataset. Please use it responsibly and solely for educational and research purposes.
 
+### What's New
+
+Updated the md5sum (from [songshiyu01](https://github.com/songshiyu01)) & Automation of getting bearer token (from [harsanyidani](https://github.com/harsanyidani))
+
 ### Usage
 
 1. Please register and log in at [https://www.nuscenes.org/nuscenes](https://www.nuscenes.org/nuscenes) to obtain access permissions.
-2. Use the browser's developer tools (F12) to monitor network requests. Click on any download link in the Full Dataset section and find the Bearer Token from the headers of the monitored download link.
-3. Insert the Bearer Token into the `bearer_token` variable in the `nuscenes_download.py` script.
-4. Set the `output_dir` and `region` variables.
-5. Run the `download_nuscenes.py` script.
+2. Set the `useremail`, `password`, `output_dir` and  `region` variables.
+3. Run the `download_nuscenes.py` script.
 
 ```python
-# replace with your API url and Bearer Token
-bearer_token = 'eyJraWQiOiJaUk14Z2gwZHg0UnRGVGR1VlhpZm9pa2U0bVJGaVlKN1lm'
+# replace your email and password in https://www.nuscenes.org/
+useremail = "your_email"
+password = "your_password"
 
 output_dir = "/path/to/save"
 region = 'asia' # 'us' or 'asia'
 
 ```
+
+### Acknowledgement
+Many thanks to the following open-source projects:
+1. https://github.com/Syzygianinfern0/NuPlan-Download-CLI
+

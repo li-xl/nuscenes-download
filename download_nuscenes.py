@@ -4,35 +4,57 @@ import hashlib
 from tqdm import tqdm
 import tarfile
 import gzip
+import json 
 
-# replace with your API url and Bearer Token
-bearer_token = 'eyJraWQiOiJaUk14Z2gwZHg0UnRGVGR1VlhpZm9pa2U0bVJGaVlKN1lm'
+# replace your email and password in https://www.nuscenes.org/
+useremail = "your_email"
+password = "your_password"
 
 output_dir = "/path/to/save"
 region = 'asia' # 'us' or 'asia'
 
 
 download_files = {
-    "v1.0-trainval_meta.tgz":"3eee698806fcf52330faa2e682b9f3a1",
-    "v1.0-trainval01_blobs.tgz":"8b5eaecef969aea173a5317be153ca63",
-    "v1.0-trainval02_blobs.tgz":"116085f49ec4c60958f9d49b2bd6bfdd",
-    "v1.0-trainval03_blobs.tgz":"9de7f2a72864d6f9ef5ce0b74e84d311",
-    "v1.0-trainval04_blobs.tgz":"4d0bec5cc581672bb557c777cd0f0556",
-    "v1.0-trainval05_blobs.tgz":"3747bb98cdfeb60f29b236a61b95d66a",
-    "v1.0-trainval06_blobs.tgz":"9f6948a19b1104385c30ad58ab64dabb",
-    "v1.0-trainval07_blobs.tgz":"d92529729f5506f5f0cc15cc82070c1b",
-    "v1.0-trainval08_blobs.tgz":"90897e7b58ea38634555c2b9583f4ada",
-    "v1.0-trainval09_blobs.tgz":"7cf0ac8b8d9925edbb6f23b96c0cd1cb",
-    "v1.0-trainval10_blobs.tgz":"fedf0df4e82630abb2d3d517be12ef9d",
-    "v1.0-test_meta.tgz":"f473fa9bb4d91e44ace5989d91419a46",
-    "v1.0-test_blobs.tgz":"3e1b78da1e08eed076ab3df082a54366",
+    "v1.0-test_meta.tgz":"b0263f5c41b780a5a10ede2da99539eb",
+    "v1.0-test_blobs.tgz":"e065445b6019ecc15c70ad9d99c47b33",
+    "v1.0-trainval01_blobs.tgz":"cbf32d2ea6996fc599b32f724e7ce8f2",
+    "v1.0-trainval02_blobs.tgz":"aeecea4878ec3831d316b382bb2f72da",
+    "v1.0-trainval03_blobs.tgz":"595c29528351060f94c935e3aaf7b995",
+    "v1.0-trainval04_blobs.tgz":"b55eae9b4aa786b478858a3fc92fb72d",
+    "v1.0-trainval05_blobs.tgz":"1c815ed607a11be7446dcd4ba0e71ed0",
+    "v1.0-trainval06_blobs.tgz":"7273eeea36e712be290472859063a678",
+    "v1.0-trainval07_blobs.tgz":"46674d2b2b852b7a857d2c9a87fc755f",
+    "v1.0-trainval08_blobs.tgz":"37524bd4edee2ab99678909334313adf",
+    "v1.0-trainval09_blobs.tgz":"a7fcd6d9c0934e4052005aa0b84615c0",
+    "v1.0-trainval10_blobs.tgz":"31e795f2c13f62533c727119b822d739",
+    "v1.0-trainval_meta.tgz":"537d3954ec34e5bcb89a35d4f6fb0d4a",
 }
 
-# set request header
-headers = {
-    'Authorization': f'Bearer {bearer_token}',
-    'Content-Type': 'application/json',
-}
+
+
+def login(username, password):
+    headers = {
+        "content-type": "application/x-amz-json-1.1",
+        "x-amz-target": "AWSCognitoIdentityProviderService.InitiateAuth",
+    }
+
+    data = (
+        '{"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"7fq5jvs5ffs1c50hd3toobb3b9","AuthParameters":{"USERNAME":"'
+        + username
+        + '","PASSWORD":"'
+        + password
+        + '"},"ClientMetadata":{}}'
+    )
+
+    response = requests.post(
+        "https://cognito-idp.us-east-1.amazonaws.com/",
+        headers=headers,
+        data=data,
+    )
+
+    token = json.loads(response.content)["AuthenticationResult"]["IdToken"]
+
+    return token
 
 def download_file(url, save_file,md5):
     response = requests.get(url, stream=True)
@@ -99,6 +121,14 @@ def extract_tar_to_original_folder(tar_file_path):
         tar.extractall(original_folder)
 
 def main():
+    print("Loginging...")
+    bearer_token = login(useremail, password)
+    # set request header
+    headers = {
+        'Authorization': f'Bearer {bearer_token}',
+        'Content-Type': 'application/json',
+    }
+
     print("Getting download urls...")
     download_data = {}
     for filename,md5 in download_files.items():
