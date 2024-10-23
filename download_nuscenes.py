@@ -34,17 +34,20 @@ download_files = {
 
 def login(username, password):
     headers = {
-        "content-type": "application/x-amz-json-1.1",
-        "x-amz-target": "AWSCognitoIdentityProviderService.InitiateAuth",
+        "Content-Type": "application/x-amz-json-1.1",
+        "X-Amz-Target": "AWSCognitoIdentityProviderService.InitiateAuth",
     }
 
-    data = (
-        '{"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"7fq5jvs5ffs1c50hd3toobb3b9","AuthParameters":{"USERNAME":"'
-        + username
-        + '","PASSWORD":"'
-        + password
-        + '"},"ClientMetadata":{}}'
-    )
+    # Use json.dumps() for correct JSON formatting
+    data = json.dumps({
+        "AuthFlow": "USER_PASSWORD_AUTH",
+        "ClientId": "7fq5jvs5ffs1c50hd3toobb3b9",
+        "AuthParameters": {
+            "USERNAME": username,
+            "PASSWORD": password
+        },
+        "ClientMetadata": {}
+    })
 
     response = requests.post(
         "https://cognito-idp.us-east-1.amazonaws.com/",
@@ -52,9 +55,16 @@ def login(username, password):
         data=data,
     )
 
-    token = json.loads(response.content)["AuthenticationResult"]["IdToken"]
+    if response.status_code == 200:
+        try:
+            token = json.loads(response.content)["AuthenticationResult"]["IdToken"]
+            return token
+        except KeyError:
+            print("Authentication failed. 'AuthenticationResult' not found in the response.")
+    else:
+        print("Failed to login. Status code:", response.status_code)
 
-    return token
+    return None
 
 def download_file(url, save_file,md5):
     response = requests.get(url, stream=True)
